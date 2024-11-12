@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 
 export default function Login() {
     // context api
-    const {createSignInUser} = useContext(AuthContext);
+    const {createSignInUser, SignInWithGoogle} = useContext(AuthContext);
+    // useNavigate for navigate to home page
+    const navigate = useNavigate();
+
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -15,12 +18,25 @@ export default function Login() {
     createSignInUser(email,password)
     .then(result=>{
         console.log(result.user);
+        e.target.reset();
+        navigate('/');
     })
     .catch(error=>{
         console.log("ERROR", error.message);
     })
 
   };
+
+  const handleGoogleSignIn = () =>{
+    SignInWithGoogle()
+    .then(result=>{
+      console.log(result.user);
+    })
+    .catch(error=>{
+      console.log("ERROR", error.message);
+      navigate('/');
+    })
+  }
 
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -64,7 +80,10 @@ export default function Login() {
             </div>
           </form>
 
-          <p className="p-4 mb-4">New to this website? Please <span className="underline text-red-500"><Link to={'/register'}>Register first</Link></span></p>
+          <p className="p-4">New to this website? Please <span className="underline text-red-500"><Link to={'/register'}>Register first</Link></span></p>
+          <p>
+            <button onClick={handleGoogleSignIn} className="btn btn-ghost">Google</button>
+          </p>
         </div>
       </div>
     </div>
