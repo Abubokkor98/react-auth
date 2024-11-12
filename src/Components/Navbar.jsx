@@ -1,5 +1,6 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink } from "react-router-dom";
+import { AuthContext } from "../Providers/AuthProvider";
 
 export default function Navbar() {
   const links = (
@@ -16,6 +17,7 @@ export default function Navbar() {
 
     </>
   );
+  const {name} = useContext(AuthContext);
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -51,7 +53,7 @@ export default function Navbar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <a className="btn">Button</a>
+        <a className="btn">{name}</a>
       </div>
     </div>
   );
