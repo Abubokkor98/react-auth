@@ -1,6 +1,6 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.init";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export const AuthContext = createContext(null);
 
@@ -18,23 +18,33 @@ const createSignInUser = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
 }
 
+// sign out user
+const signOutUser = () =>{
+    signOut(auth);
+}
+
 // AuthState
-// onAuthStateChanged(auth, currentUser=>{
-//     if(currentUser){
-//         console.log('Currently logged user', currentUser);
-//         setUser(currentUser);
-//     }
-//     else{
-//         console.log("No User logged in");
-//         setUser(null);
-//     }
-// })
+useEffect(()=>{
+   const unSubscribe =  onAuthStateChanged(auth, currentUser=>{
+        console.log("Current user", currentUser);
+        setUser(currentUser);
+    })
+
+    return () => {
+        unSubscribe;
+    }
+
+
+
+},[])
 
   //this is context API
   const authInfo = {
     name,
+    user,
     createUser,
     createSignInUser,
+    signOutUser,
   };
 
   return (
