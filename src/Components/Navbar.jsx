@@ -3,6 +3,18 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 
 export default function Navbar() {
+  const { user, signOutUser } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    signOutUser()
+      .then(() => {
+        console.log("user sign-out successfully");
+      })
+      .catch((error) => {
+        console.log("ERROR", error.message);
+      });
+  };
+
   const links = (
     <>
       <li>
@@ -14,20 +26,15 @@ export default function Navbar() {
       <li>
         <NavLink to={"/register"}>Register</NavLink>
       </li>
+      {user && (
+        <>
+          <li>
+            <NavLink to={"/orders"}>Orders</NavLink>
+          </li>
+        </>
+      )}
     </>
   );
-
-  const { user, signOutUser } = useContext(AuthContext);
-
-  const handleSignOut = () => {
-    signOutUser()
-    .then(()=>{
-        console.log('user sign-out successfully');
-    })
-    .catch(error=>{
-        console.log("ERROR", error.message);
-    })
-  };
 
   return (
     <div className="navbar bg-base-100">

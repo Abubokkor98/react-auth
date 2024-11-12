@@ -6,21 +6,24 @@ export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-  const name = "Axd Ab";
+    // useState for privateRoute
+    const [loading, setLoading] = useState(true);
 
   //for register
   const createUser = (email, password) => {
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
 //   for login
 const createSignInUser = (email, password) => {
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
 }
 
 // sign out user
 const signOutUser = () =>{
-    signOut(auth);
+    return signOut(auth);
 }
 
 // AuthState
@@ -28,6 +31,7 @@ useEffect(()=>{
    const unSubscribe =  onAuthStateChanged(auth, currentUser=>{
         console.log("Current user", currentUser);
         setUser(currentUser);
+        setLoading(false);
     })
 
     return () => {
@@ -40,8 +44,8 @@ useEffect(()=>{
 
   //this is context API
   const authInfo = {
-    name,
     user,
+    loading,
     createUser,
     createSignInUser,
     signOutUser,
